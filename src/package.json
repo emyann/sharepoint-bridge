@@ -1,0 +1,38 @@
+{
+  "name": "sharepoint-bridge",
+  "description": "SharePoint Client Synchronization",
+  "version": "0.2.0",
+  "main": "index.html",
+  "author":{
+      "name": "Yann Renaudin",
+      "url": "https://github.com/emyann"
+  },
+  "contributors":[],
+  "window": {
+    "toolbar": true,
+    "width": 800,
+    "height": 800,
+    "icon":"images/favicon.ico",
+    "frame":true
+  },
+  "dependencies": {
+    "jade": "~0.35.0",
+    "passport": "~0.1.17",
+    "passport-twitter": "~1.0.2",
+    "request": "~2.27.0",
+    "querystring": "~0.2.0",
+    "moment": "~2.4.0",
+    "shortid": "~2.0.0",
+    "tungus": "0.0.2",
+    "mongoose": "~3.8.7",
+    "xml2js":"*",
+    "request":"*"
+  },
+  "scripts":{
+    "postinstall" : "node ../etc/scripts/postinstall.js"
+  },
+  "webkit":{
+    "plugin":true
+  }
+
+}

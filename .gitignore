@@ -1,0 +1,8 @@
+/node_modules
+/src/lib/*
+/src/resources/*.json
+*.db
+data
+.idea
+/releases/
+/cache/

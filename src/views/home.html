@@ -1,0 +1,77 @@
+<div class="page-header">
+    <div class="title animated fadeInLeft">
+        <h1>SharePoint Bridge</h1>
+    </div>
+</div>
+<div class="content container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="page-title">Dashboard
+                <small>FolderName</small>
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <section class="widget" ng-controller="WorkspaceCtrl">
+                <header>
+                    <h4>
+                        Folder content
+                    </h4>
+                </header>
+                <div class="body no-margin">
+                    <div class="row">
+                        <ul>
+                            <li class="col-sm-3" ng-repeat="file in files">
+                              <i class="fa fa-folder fa-2x"/>
+                              <span>{{file}}</span>
+                               <!--  <button class="btn btn-mini" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
+                                {{$index}}: {{slide.text}} -->
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+        <div class="col-sm-4">
+            <section class="widget" ng-controller="SignupCtrl">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <legend>Sign in ({{authenticated}})</legend>
+
+                        <div class="form-group">
+                            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input ng-model="username" type="text" class="form-control" id="inputEmail" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                            <div class="col-lg-10">
+                                <input ng-model="password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <button type="submit" class="btn btn-primary" ng-click="authenticate()">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </section>
+
+            <section class="widget">
+                <header>
+                    <h4>
+
+                        Feed
+                    </h4>
+                </header>
+                <div class="body">
+                    Some Feeds about files, sync status, files size...
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
