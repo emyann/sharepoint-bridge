@@ -1,14 +1,32 @@
-<div class="page-header">
-    <div class="title animated fadeInLeft">
-        <h1>SharePoint Bridge</h1>
-    </div>
-</div>
 <div class="content container">
     <div class="row">
-        <div class="col-md-12">
-            <h2 class="page-title">Dashboard
-                <small>FolderName</small>
-            </h2>
+        <div class="">
+            <h2 class="page-title col-md-6">All Repositories</h2>
+            <div class="input-group col-md-6" ng-controller="WorkspaceCtrl">
+                <input ng-model="repositoryUrl" type="text" class="form-control" placeholder="http://repository.url/folder" value="">
+                <span class="input-group-btn">
+                    <button class="btn btn-info" type="button" ng-click="addRepository()"><i class="fa fa-plus"></i>
+                    </button>
+                </span>
+            </div>
+
+            <script type="text/ng-template" id="myModalContent.html">
+            < div class = "modal-header" > < h3 > I 'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a ng-click="selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+            </script>
+
         </div>
     </div>
     <div class="row">
@@ -23,9 +41,9 @@
                     <div class="row">
                         <ul>
                             <li class="col-sm-3" ng-repeat="file in files">
-                              <i class="fa fa-folder fa-2x"/>
-                              <span>{{file}}</span>
-                               <!--  <button class="btn btn-mini" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
+                                <i class="fa fa-folder fa-2x" />
+                                <span>{{file}}</span>
+                                <!--  <button class="btn btn-mini" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
                                 {{$index}}: {{slide.text}} -->
                             </li>
                         </ul>
@@ -35,31 +53,7 @@
             </section>
         </div>
         <div class="col-sm-4">
-            <section class="widget" ng-controller="SignupCtrl">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <legend>Sign in ({{authenticated}})</legend>
 
-                        <div class="form-group">
-                            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-                            <div class="col-lg-10">
-                                <input ng-model="username" type="text" class="form-control" id="inputEmail" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword" class="col-lg-2 control-label">Password</label>
-                            <div class="col-lg-10">
-                                <input ng-model="password" type="password" class="form-control" id="inputPassword" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-lg-10 col-lg-offset-2">
-                                <button type="submit" class="btn btn-primary" ng-click="authenticate()">Submit</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </section>
 
             <section class="widget">
                 <header>

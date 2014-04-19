@@ -15,7 +15,7 @@ requirejs.config({
         '$': '../lib/jquery/jquery',
         'angular-bootstrap':'../lib/angular-bootstrap/ui-bootstrap',
         'angular-bootstrap-tmpls': '../lib/angular-bootstrap/ui-bootstrap-tpls'
-    },
+            },
 
     /**
      * for libs that either do not support AMD out of the box, or
