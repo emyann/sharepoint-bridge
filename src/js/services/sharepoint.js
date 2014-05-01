@@ -4,7 +4,7 @@
     services.service('sharepointService', ['$q',
         function($q) {
 
-            /** imports **/
+            /** IMPORTS **/
             var fs = require('fs'),
                 path = require('path'),
                 https = require('https'),
@@ -13,24 +13,19 @@
                 xml2js = require('xml2js'),
                 request = require('request');
 
-            /** imports **/
+                https.globalAgent.options.secureProtocol = 'SSLv3_method';
 
+            /** IMPORTS **/
+
+
+            /** INTERNAL MEMBERS **/
+            var _token = ""; // SAML Token get from STS 
             var _targetService = "https://supinfocom.sharepoint.com/_forms/default.aspx?wa=wsignin1.0"; // Global variable to delete
-
-            /** internal members **/
-            var _token = ""; // SAML Token get from STS
-            // var _targetService = urlparse(url);
-            // _targetService.loginPage = '/_forms/default.aspx?wa=wsignin1.0'; // Form to submit SAML token
-
             var _secureTokenService = "https://login.microsoftonline.com/extSTS.srf";
-            // var _secureTokenService = {
-            //     host: 'login.microsoftonline.com',
-            //     path: '/extSTS.srf',
-            //     protocol:'https'
-            // };
-            /** internal members **/
+            /** INTERNAL MEMBERS **/
 
-            /** private functions **/
+            /** PRIVATE FUNCTIONS **/
+            /* Create SOAP ENVELOPE with user's credentials using a saved template for handshake with Microsoft Secure Token Service (STS) */
             var buildSamlRequest = function(params) {
                 var key,
                     soapTmplFile = "soapEnv-Template.xml"; // get the soap template for request SAML
@@ -53,7 +48,7 @@
                 parser.parseString(xml);
             };
 
-
+            /* Request Token from Microsoft Secure Token Service*/
             var requestToken = function(params) {
                 var _self = this;
                 var deferred = $q.defer();
@@ -63,7 +58,6 @@
                     var options = {
                         url: _secureTokenService,
                         body: samlSoapRequest,
-
                         // proxy: "http://127.0.0.1:8888"
                     };
                     request.post(options, function(error, response, body) {
@@ -82,7 +76,7 @@
                                 }
                             });
                         } else {
-                            deferred.reject(e.message);
+                            deferred.reject(error.message);
                         }
 
 
@@ -100,35 +94,41 @@
                 //     port: '8888',
                 //     path: "https://supinfocom.sharepoint.com/_forms/default.aspx?wa=wsignin1.0",
                 //     headers: {
-                //         'Content-Length': _token.length,
+                //         'Content-Length': token.length,
                 //         'Content-Type': 'application/x-www-form-urlencoded',
                 //         'host': urlparse(_targetService).host
                 //     }
                 // };
+               
                  var options = {
                     host: urlparse(_targetService).host,
                     method: 'POST',
                     path: urlparse(_targetService).path,
                     headers: {
-                        'Content-Length': _token.length,
+                        'Content-Length': token.length,
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 };
 
-                console.log("opts", options);
+                console.log("Token Submission Parameters: ", options);
                 var req = https.request(options, function(res) {
-                    console.log('STATUS: ' + res.statusCode);
+                    // console.log('STATUS: ' + res.statusCode);
                     // console.log('HEADERS: ' + JSON.stringify(res.headers));
+
                     res.setEncoding('utf8');
                     var cookies = parseCookies(res);
                     setCookiesForSubsequentCalls(cookies);
-                    res.on('data', function(chunk) {
-                        console.log('BODY: ' + chunk);
-                    });
+
+                    deferred.resolve("Access Granted");
+
+                    // res.on('data', function(chunk) {
+                    //     console.log('BODY: ' + chunk);
+                    // });
                 });
 
-                req.on('error', function(e) {
+                req.on('error', function(e) {                    
                     console.log('problem with request: ' + e.message);
+                    deferred.reject("Something is wrong with authentication: "+ e.message);
                 });
 
                 req.write(token);
@@ -139,35 +139,20 @@
 
             };
 
-            var setCookiesForSubsequentCalls = function(cookies) {
+             var setCookiesForSubsequentCalls = function(cookies) {
                 var j = request.jar();
-                console.log(cookies);
-                // for(cookie in cookies) {
+                console.log("Cookies for secure communications: ",cookies);
 
-                // if(cookie != "RpsContextCookie"){
-
-                //var rowCookie = request.cookie(cookie+'='+cookies[cookie]);
-                j.setCookie(request.cookie('FedAuth=' + cookies['FedAuth'], "https://supinfocom.sharepoint.com"));
-                j.setCookie(request.cookie('rtFa=' + cookies['rtFa'], "https://supinfocom.sharepoint.com"));
-                // }
-
-                // }
+                j.add(request.cookie('FedAuth=' + cookies['FedAuth'], "https://supinfocom.sharepoint.com"));
+                j.add(request.cookie('rtFa=' + cookies['rtFa'], "https://supinfocom.sharepoint.com"));
 
                 var req = request.defaults({
                     jar: j
                 });
-                req("https://supinfocom.sharepoint.com/sites/courses/_api/web/GetFolderByServerRelativeUrl('/sites/courses/MSc%201')", function(error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        console.log(body);
-                    }
-                    console.log('error', error);
-                     console.log('response', response);
-                });
             };
 
             var parseCookies = function(response) {
-                console.log(response.headers['set-cookie']);
-                var list = {},
+               var list = {},
                     rc = response.headers['set-cookie'];
 
                 rc && rc.forEach(function(cookie) {
@@ -182,9 +167,10 @@
             /** public functions **/
             this.getCookies = function(params) {
                 return requestToken(params).then(function(token) {
-                    return submitToken(_token);
+                    console.log("Token Issued: ", token);
+                    return submitToken(token);
                 }, function(reason) {
-                    console.log("failrqstToken: ", reason);
+                   return reason;
                 });
 
                 // return $q.when(true);

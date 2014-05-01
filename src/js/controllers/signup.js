@@ -1,11 +1,17 @@
 define(['./module'], function(controllers) {
     'use strict';
 
-    controllers.controller('SignupCtrl', ['$scope', 'securityService', '$location', 'nwService',
-        function($scope, securityService, $location, nwService) {
+    controllers.controller('SignupCtrl', ['$scope', 'securityService', '$location', 'nwService','$modalInstance','repositoryUrl',
+        function($scope, securityService, $location, nwService,$modalInstance,repositoryUrl) {
+
+
+            console.log("Repository URL: ",repositoryUrl);
 
             var path = require('path'),
-                fs = require('fs');
+                fs = require('fs'),
+                urlparse=require('url').parse;
+
+                $scope.repositoryUrl= repositoryUrl || "";
 
 
             securityService.hasValidToken().then(function(hasToken) {
@@ -14,6 +20,7 @@ define(['./module'], function(controllers) {
 
 
             $scope.authenticate = function() {
+                console.log("Repository URL",$scope.repositoryUrl);
                 var username = this.username;
                 var password = this.password;
 
@@ -24,12 +31,14 @@ define(['./module'], function(controllers) {
                         username = credentials.username;
                         password = credentials.password;
                     }
-
                 }
-                console.log(username,password);
-
-                securityService.authenticateUser(username, password)
+                console.log("credentials submitted");
+                
+                var resourceEndpoint = urlparse(repositoryUrl).protocol + "//"+urlparse(repositoryUrl).host;
+                securityService.authenticateUser(username, password,resourceEndpoint)
                     .then(function(resp) {
+                       // $modalInstance.close(resp);
+                       $scope.$close(resp);
                         console.log("security Service: authenticateUser", resp);
                     }, function(err) {
                         console.dir(err);

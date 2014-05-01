@@ -1,19 +1,20 @@
-define(['./module'], function(controllers) {
+define(['./module','_'], function(controllers,_) {
     'use strict';
 
-    controllers.controller('WorkspaceCtrl', ['$scope', '$modal', 'securityService', '$location', 'db', 'Repository','$log',
-        function($scope, $modal, securityService, $location, db, Repository,$log) {
+    controllers.controller('WorkspaceCtrl', ['$scope', '$modal', 'securityService', '$location', 'db', 'Repository', '$log',
+        function($scope, $modal, securityService, $location, db, Repository, $log) {
+
             var path = require('path'),
                 fs = require('fs'),
                 urlparse = require('url').parse;
-               
+
 
             $scope.getFiles = function() {
                 this.files = [];
-                var env = process.env;
-                var workspace = path.join(env.SystemDrive, env.HOMEPATH, '\\Documents\\Supinfo');
-                this.files = fs.readdirSync(workspace);
-                console.log(this.files);
+                // var env = process.env;
+                // var workspace = path.join(env.SystemDrive, env.HOMEPATH, '\\Documents\\Supinfo');
+                // this.files = fs.readdirSync(workspace);
+                // console.log(this.files);
             };
 
             //$scope.getFiles();
@@ -22,21 +23,14 @@ define(['./module'], function(controllers) {
                 Repository.count(function(err, count) {
                     console.log("Detected %d repositories already in the database", count);
                 });
-                //console.log("signup",SignupCtrl);
-                var modalInstance = $modal.open({
-                    templateUrl: path.resolve("./views/signup.html"),
-                    resolve: {
-                        items: function() {
-                            return $scope.items;
-                        }
-                    }
+
+                Repository.find({},null,function(err,repositories){
+                   _.each(repositories,function(){
+                    console.log("args repo:",arguments);
+                   });
                 });
 
-                modalInstance.result.then(function(selectedItem) {
-                    $scope.selected = selectedItem;
-                }, function() {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
+
 
                 //Check if repository already exists
                 Repository.findOne({
@@ -46,11 +40,10 @@ define(['./module'], function(controllers) {
                         throw err;
                     } else {
                         if (!repository) {
-                            var goToLogin = !checkCookiesForUrl(Repository, $scope.repositoryUrl);
+                            var goToLogin = !checkCookiesForUrl(Repository, $scope.repositoryUrl); // change checkCookies for a method into securityService as hasValidToken
                             if (goToLogin) {
-
+                              processLoginWorkflow();
                             }
-                            console.log($scope.repositoryUrl);
                             var repository = new Repository({
                                 title: "",
                                 url: $scope.repositoryUrl
@@ -65,8 +58,25 @@ define(['./module'], function(controllers) {
             };
 
             var checkCookiesForUrl = function(Repository, url) {
-                return true;
-            }
+                return false;
+            };
+
+            var processLoginWorkflow = function() {
+                  console.log("Repository URL before Modal",$scope.repositoryUrl);
+                var signupModal = $modal.open({
+                    templateUrl: path.resolve("./views/signup.html"),
+                    controller: 'SignupCtrl',
+                    resolve: {
+                        repositoryUrl:function(){ return $scope.repositoryUrl},
+                    }
+                });
+                signupModal.result.then(function(selectedItem) {
+                  console.log(selectedItem);
+                    $scope.selected = selectedItem;
+                }, function() {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            };
 
         }
     ]);

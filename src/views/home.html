@@ -3,30 +3,12 @@
         <div class="">
             <h2 class="page-title col-md-6">All Repositories</h2>
             <div class="input-group col-md-6" ng-controller="WorkspaceCtrl">
-                <input ng-model="repositoryUrl" type="text" class="form-control" placeholder="http://repository.url/folder" value="">
+                <input ng-model="repositoryUrl" ng-required="true" type="text" class="form-control" placeholder="http://repository.url/folder" value="">
                 <span class="input-group-btn">
                     <button class="btn btn-info" type="button" ng-click="addRepository()"><i class="fa fa-plus"></i>
                     </button>
                 </span>
             </div>
-
-            <script type="text/ng-template" id="myModalContent.html">
-            < div class = "modal-header" > < h3 > I 'm a modal!</h3>
-        </div>
-        <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">
-                    <a ng-click="selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ selected.item }}</b>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-            </script>
-
         </div>
     </div>
     <div class="row">

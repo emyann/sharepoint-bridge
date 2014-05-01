@@ -11,17 +11,19 @@ define(['./module', '_'], function(services) {
                 return $q.when(true);
             };
 
-            this.authenticateUser = function(username, password) {
+            this.authenticateUser = function(username, password,endpoint) {
 
                 var params = {
                     username: username,
                     password: password,
-                    endpoint: "https://supinfocom.sharepoint.com/"
+                    endpoint: endpoint
                 };
+
+                console.log("Authentication Parameters: ",username,endpoint);
                 return sharepointService.getCookies(params)
-                    .then(function(token) {
-                        console.log("token",token);
-                        return token;
+                    .then(function(response) {
+                        console.log("Authentication Response",response);
+                        return response;
                     });
 
             };
