@@ -11,13 +11,13 @@ define(['./module','_'], function(controllers,_) {
 
             $scope.getFiles = function() {
                 this.files = [];
-                // var env = process.env;
-                // var workspace = path.join(env.SystemDrive, env.HOMEPATH, '\\Documents\\Supinfo');
-                // this.files = fs.readdirSync(workspace);
-                // console.log(this.files);
+                var env = process.env;
+                var workspace = path.join(env.SystemDrive, env.HOMEPATH, '\\Documents\\Supinfo');
+                this.files = fs.readdirSync(workspace);
+                console.log(this.files);
             };
 
-            //$scope.getFiles();
+            $scope.getFiles();
 
             $scope.addRepository = function() {
                 Repository.count(function(err, count) {
@@ -57,6 +57,9 @@ define(['./module','_'], function(controllers,_) {
 
             };
 
+            $scope.browseRepository=function(){
+                
+            }
             var checkCookiesForUrl = function(Repository, url) {
                 return false;
             };

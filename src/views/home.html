@@ -5,26 +5,24 @@
             <div class="input-group col-md-6" ng-controller="WorkspaceCtrl">
                 <input ng-model="repositoryUrl" ng-required="true" type="text" class="form-control" placeholder="http://repository.url/folder" value="">
                 <span class="input-group-btn">
-                    <button class="btn btn-info" type="button" ng-click="addRepository()"><i class="fa fa-plus"></i>
+                    <button class="btn btn-info"  data-toggle="tooltip" data-placement="top" data-original-title="Tooltip on left" type="button" ng-click="addRepository()"><i class="fa fa-plus"></i>
                     </button>
                 </span>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-8">
-            <section class="widget" ng-controller="WorkspaceCtrl">
-                <header>
-                    <h4>
-                        Folder content
-                    </h4>
-                </header>
+        <div class="col-sm-12">
+            <section class="" ng-controller="WorkspaceCtrl">
                 <div class="body no-margin">
                     <div class="row">
-                        <ul>
+                        <ul class="folder-list">
                             <li class="col-sm-3" ng-repeat="file in files">
-                                <i class="fa fa-folder fa-2x" />
-                                <span>{{file}}</span>
+                                <div class="folder-tile widget" ng-click="browseRepository()">   
+                                   <div class="content">   <i class="fa fa-folder"/>  </div>
+                                        <h6 class="title">{{file}}</h6>
+                                </div>
+                                
                                 <!--  <button class="btn btn-mini" ng-class="{'btn-info': !slide.active, 'btn-success': slide.active}" ng-disabled="slide.active" ng-click="slide.active = true">select</button>
                                 {{$index}}: {{slide.text}} -->
                             </li>
@@ -34,7 +32,7 @@
                 </div>
             </section>
         </div>
-        <div class="col-sm-4">
+       <!--  <div class="col-sm-4">
 
 
             <section class="widget">
@@ -49,5 +47,5 @@
                 </div>
             </section>
         </div>
-    </div>
+ -->    </div>
 </div>

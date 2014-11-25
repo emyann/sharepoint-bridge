@@ -28,3 +28,23 @@ body {
   margin-bottom: 30px;
   position: relative;
 }
+
+.folder-list{
+  list-style: none;
+  padding:0;
+}
+
+.folder-tile{
+  height:125px;
+  cursor : pointer;
+}
+
+.folder-tile .title{
+display: block;
+position: absolute;
+bottom: 0;
+left: 0;
+text-align: center;
+right: 0;
+
+}

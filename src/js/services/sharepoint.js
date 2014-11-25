@@ -13,7 +13,7 @@
                 xml2js = require('xml2js'),
                 request = require('request');
 
-                https.globalAgent.options.secureProtocol = 'SSLv3_method';
+            https.globalAgent.options.secureProtocol = 'SSLv3_method';
 
             /** IMPORTS **/
 
@@ -99,8 +99,8 @@
                 //         'host': urlparse(_targetService).host
                 //     }
                 // };
-               
-                 var options = {
+
+                var options = {
                     host: urlparse(_targetService).host,
                     method: 'POST',
                     path: urlparse(_targetService).path,
@@ -121,14 +121,14 @@
 
                     deferred.resolve("Access Granted");
 
-                    // res.on('data', function(chunk) {
-                    //     console.log('BODY: ' + chunk);
-                    // });
+
+
+
                 });
 
-                req.on('error', function(e) {                    
+                req.on('error', function(e) {
                     console.log('problem with request: ' + e.message);
-                    deferred.reject("Something is wrong with authentication: "+ e.message);
+                    deferred.reject("Something is wrong with authentication: " + e.message);
                 });
 
                 req.write(token);
@@ -139,9 +139,9 @@
 
             };
 
-             var setCookiesForSubsequentCalls = function(cookies) {
+            var setCookiesForSubsequentCalls = function(cookies) {
                 var j = request.jar();
-                console.log("Cookies for secure communications: ",cookies);
+                console.log("Cookies for secure communications: ", cookies);
 
                 j.add(request.cookie('FedAuth=' + cookies['FedAuth'], "https://supinfocom.sharepoint.com"));
                 j.add(request.cookie('rtFa=' + cookies['rtFa'], "https://supinfocom.sharepoint.com"));
@@ -149,10 +149,24 @@
                 var req = request.defaults({
                     jar: j
                 });
+
+                console.log(req);
+                /** test Querying Sharepoint Lists by API **/
+                req.get({
+                    url: "https://supinfocom.sharepoint.com/sites/courses/_api/web/Lists?$select=Title",
+                    json: true
+                }, function(error, response, body) {
+                    console.log("Req SPLists: error: ", error);
+                    console.log("Req SPLists: response: ", response);
+
+                    console.log("Req SPLists: body: ", body);
+
+                });
+                /** test Querying Sharepoint Lists by API **/
             };
 
             var parseCookies = function(response) {
-               var list = {},
+                var list = {},
                     rc = response.headers['set-cookie'];
 
                 rc && rc.forEach(function(cookie) {
@@ -170,7 +184,7 @@
                     console.log("Token Issued: ", token);
                     return submitToken(token);
                 }, function(reason) {
-                   return reason;
+                    return reason;
                 });
 
                 // return $q.when(true);
